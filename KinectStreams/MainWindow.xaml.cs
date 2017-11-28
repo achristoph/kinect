@@ -30,7 +30,7 @@ namespace KinectStreams
         IList<Body> _bodies;
 
         bool _displayBody = false;
-        bool initialTrack = true;
+        bool trackedOnce = false;
 
         #endregion
 
@@ -143,16 +143,25 @@ namespace KinectStreams
                             }
                         }
                     }
-                    if (_bodies.All((b) => !b.IsTracked) && !initialTrack)
+                    if (_bodies.All((b) => !b.IsTracked) && !trackedOnce)
                     {
-                        BitmapImage imgSource = new BitmapImage(new Uri("frog2.jpg", UriKind.Relative));
+                        animation.Source = null;
+                    }
+                    else if (_bodies.Any((b) => b.IsTracked) && trackedOnce)
+                    {
+                        BitmapImage imgSource = new BitmapImage(new Uri("frog1.jpg", UriKind.Relative));
                         animation.Source = imgSource;
                     }
                     else
                     {
-                        initialTrack = false;
-                        BitmapImage imgSource = new BitmapImage(new Uri("frog1.jpg", UriKind.Relative));
-                        animation.Source = imgSource;
+                        if (!trackedOnce)
+                        {
+                            trackedOnce = true;
+                        } else
+                        {
+                            BitmapImage imgSource = new BitmapImage(new Uri("frog2.jpg", UriKind.Relative));
+                            animation.Source = imgSource;
+                        }
                     }
                 }
             }
